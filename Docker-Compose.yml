@@ -1,0 +1,23 @@
+version: '3.7'
+
+services:
+  tasks_service:
+    build: ./
+    command: uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+    volumes:
+      - ./:/app/
+    ports:
+      - 8001:8000
+    environment:
+      - DATABASE_URI=postgresql://task_db_username:task_db_password@task_db/task_db_dev
+
+  task_db:
+    image: postgres:12.1-alpine
+    volumes:
+      - postgres_data_task:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=task_db_username
+      - POSTGRES_PASSWORD=task_db_password
+      - POSTGRES_DB=task_db_dev
+volumes:
+  postgres_data_task:
